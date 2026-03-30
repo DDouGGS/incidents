@@ -1,0 +1,19 @@
+{
+    "name": "ddouggs/incidents",
+    "description": "Dota sistema PHP quanto ao gerênciamento de eventos designados",
+    "type": "library",
+    "license": "Apache-2.0",
+    "autoload": {
+        "psr-4": {
+         s\\Incidents\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Douglas Gonçalves de Souza",
+            "email": "ti.dougg@gmail.com"
+        }
+    ],
+    "minimum-stability": "alpha",
+    "require": {}
+}

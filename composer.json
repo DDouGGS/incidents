@@ -1,11 +1,11 @@
 {
-    "name": "ddouggs/incidents",
-    "description": "Dota sistema PHP quanto ao gerênciamento de eventos designados",
+    "name": "ddouggs/event_manager",
+    "description": "Dota o sistema PHP do gerênciamento de eventos nomeados",
     "type": "library",
     "license": "Apache-2.0",
     "autoload": {
         "psr-4": {
-            "ddouggs\\incidents\\": "src/"
+            "\\ddouggs\\event_manager\\": "src/"
         }
     },
     "authors": [

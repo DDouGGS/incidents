@@ -2,4 +2,4 @@
 
 namespace ddouggs\event_manager;
 
-interface ObserversInterface {}
+interface EventInterface {}

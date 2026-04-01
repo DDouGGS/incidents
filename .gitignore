@@ -181,3 +181,8 @@ FodyWeavers.xsd
 
 /vendor/
 
+#drawio
+*.drawio
+*.drawio.bkp
+
+

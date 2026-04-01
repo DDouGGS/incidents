@@ -1,56 +1,52 @@
 <?php
 
-namespace ddouggs\incidents;
+namespace ddouggs\event_manager;
+
+use ddouggs\event_manager\ObserversInterface;
 
 class Observers implements ObserversInterface
 {
-    protected $name      = null;
     protected $observers = array();
-    protected $erros     = array();
 
-    public function __construct(string $name)
+    // Adicionar observador para o evento
+    public function attach(string $name, $observer)
     {
-        $this->name = $name;
+        if (isset($name) && !empty($name)) {
+            $this->observers[$name] = $observer;
+            return true;
+        }
+        return false;
     }
 
-    public static function make(string $name)
+    // Exclui observador para o evento
+    public function deattach(string $name)
     {
-        return new Observers($name);
+        if (isset($name) && !empty($name)) {
+            unset($this->observers[$name]);
+            return true;
+        }
+        return false;
     }
 
-    public function add(ObserversInterface $observer)
+    // Dispara o evento
+    public function notify()
     {
-        $this->observers[] = $observer;
-        return $this;
-    }
-
-    public function remove(string $nameClass)
-    {
-        $observers = array();
-        foreach ($this->observers as $observer) {
-            if (get_class($observer) === $nameClass) {
+        foreach ($this->observers as $key => $value) {
+            try {
+                if (!$value()) {
+                    throw new \Exception(sprintf("Erro durante a execução do observer %s.", $key));
+                }
+            } catch (\Exception $e) {
                 continue;
             }
-            $observers[] = $observer;
         }
-        $this->observers = $observers;
-        return $this;
+        return true;
     }
 
-    public function notify(object $object)
+    // Limpa os observadores
+    public function clear()
     {
-        foreach ($this->observers as $item) {
-            if (method_exists($item, $this->name)) {
-                try {
-                    if (!$item->{$this->name}($object)) {
-                        continue;
-                    }
-                } catch (\Exception $e) {
-                    $this->erros[] = sprintf("Erro: " . $e->getMessage() . '. Evento %s.', $this->name);
-                    continue;
-                }
-            }
-        }
-        return $this;
+        self::$observers = array();
+        return empty(self::$observers) ? true : false;
     }
 }

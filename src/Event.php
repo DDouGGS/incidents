@@ -7,42 +7,44 @@ namespace event_manager;
 
 class Event implements EventInterface
 {
-    protected $observers;
+    protected $observers = null;
 
-    public function __construct()
+    // Evento construtor da classe
+    public function __construct($index = null, $observer = null)
     {
-        $this->observers = new Observers();
+        $this->observers = new Observers($index, $observer);
     }
 
-    public static function make()
+    // Cria instancia da classe
+    public static function make($index = null, $observer = null)
     {
-        return new Event();
+        return new Event($index, $observer);
     }
 
     // Adicionar observador para o evento
-    public function attach(string $name, $observer)
+    public function attach($index, $observer)
     {
         try {
-            if (isset($name) && !empty($name)) {
-                $this->observers->attach($name, $observer);
+            if(isset($index) && !empty($index) && isset($observer)) {
+                $this->observers->attach($index, $observer);
                 return $this;
             }
         } catch (\Exception $e) {
-            throw new \Exception('Nï¿½o foi possï¿½vel registrar observador.');
+            throw new \Exception('Não foi possível registrar observador.');
         }
         return $this;
     }
 
     // Exclui observador para o evento
-    public function deattach(string $name)
+    public function deattach($index)
     {
         try {
-            if (isset($name) && !empty($name)) {
-                $this->observers->deattach($name);
+            if (isset($index) && !empty($index)) {
+                $this->observers->deattach($index);
                 return $this;
             }
         } catch (\Exception $e) {
-            throw new \Exception('Nï¿½o foi possï¿½vel excluir observador.');
+            throw new \Exception('Não foi possível excluir observador.');
         }
         return $this;
     }

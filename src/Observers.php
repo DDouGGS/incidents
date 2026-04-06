@@ -8,33 +8,47 @@ class Observers implements ObserversInterface
 {
     protected $observers = array();
 
-    // Adicionar observador para o evento
-    public function attach(string $name, $observer)
+    // Evento construtor da classe
+    public function __construct($index = null, $observer = null)
     {
-        if (isset($name) && !empty($name)) {
-            $this->observers[$name] = $observer;
+        if(isset($index) && !empty($index) && !empty($observer)){
+            $this->attach($index, $observer);
+        }
+    }
+
+    // Criar instancia da classe
+    public static function make($index = null, $observer = null)
+    {
+        return new Observers($index, $observer);
+    }
+
+    // Adiciona observador para o evento
+    public function attach( $index, $observer)
+    {
+        if(isset($index) && !empty($index) && !empty($observer)) {
+            $this->observers[$index] = $observer;
             return true;
         }
         return false;
     }
 
     // Exclui observador para o evento
-    public function deattach(string $name)
+    public function deattach(string $index)
     {
-        if (isset($name) && !empty($name)) {
-            unset($this->observers[$name]);
+        if (isset($index) && !empty($index)) {
+            unset($this->observers[$index]);
             return true;
         }
         return false;
     }
 
-    // Dispara o evento
+    // Dispara o evento para os observadores
     public function notify()
     {
-        foreach ($this->observers as $key => $value) {
+        foreach ($this->observers as $key => $item) {
             try {
-                if (!$value()) {
-                    throw new \Exception(sprintf("Erro durante a execuÃ§Ã£o do observer %s.", $key));
+                if (!$item()) {
+                    throw new \Exception(sprintf("Erro durante a execução do observador %s.", $key));
                 }
             } catch (\Exception $e) {
                 continue;

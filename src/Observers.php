@@ -1,8 +1,8 @@
 <?php
 
-namespace ddouggs\event_manager;
+namespace event_manager;
 
-use ddouggs\event_manager\ObserversInterface;
+use event_manager\ObserversInterface;
 
 class Observers implements ObserversInterface
 {

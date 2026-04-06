@@ -1,8 +1,8 @@
 <?php
 
-namespace ddouggs\event_manager;
+namespace event_manager;
 
-use ddouggs\event_manager\Event;
+// use ddouggs\event_manager\Event;
 
 abstract class EventManager
 {
@@ -29,8 +29,8 @@ abstract class EventManager
     // }
 
     // Acessa evento
-    public static function exists(string $name)
-    {
-        return (isset(self::$events[$name]) && !empty(self::$events[$name]))? true: false;
-    }
+    // public static function exists(string $name)
+    // {
+    //     return (isset(self::$events[$name]) && !empty(self::$events[$name]))? true: false;
+    // }
 }

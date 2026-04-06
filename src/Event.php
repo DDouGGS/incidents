@@ -1,9 +1,9 @@
 <?php
 
-use ddouggs\event_manager\EventInterface;
-use ddouggs\event_manager\Observers;
+use event_manager\EventInterface;
+use event_manager\Observers;
 
-namespace ddouggs\event_manager;
+namespace event_manager;
 
 class Event implements EventInterface
 {
@@ -28,7 +28,7 @@ class Event implements EventInterface
                 return $this;
             }
         } catch (\Exception $e) {
-            throw new \Exception('Não foi possível registrar observador.');
+            throw new \Exception('Nï¿½o foi possï¿½vel registrar observador.');
         }
         return $this;
     }
@@ -42,7 +42,7 @@ class Event implements EventInterface
                 return $this;
             }
         } catch (\Exception $e) {
-            throw new \Exception('Não foi possível excluir observador.');
+            throw new \Exception('Nï¿½o foi possï¿½vel excluir observador.');
         }
         return $this;
     }

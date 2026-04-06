@@ -1,9 +1,9 @@
 <?php
 
-namespace ddouggs\event_manager;
-
-use ddouggs\event_manager\Observers;
 use ddouggs\event_manager\EventInterface;
+use ddouggs\event_manager\Observers;
+
+namespace ddouggs\event_manager;
 
 class Event implements EventInterface
 {
@@ -14,16 +14,23 @@ class Event implements EventInterface
         $this->observers = new Observers();
     }
 
+    public static function make()
+    {
+        return new Event();
+    }
+
     // Adicionar observador para o evento
     public function attach(string $name, $observer)
     {
         try {
             if (isset($name) && !empty($name)) {
-                return $this->observers->attach($name, $observer);
+                $this->observers->attach($name, $observer);
+                return $this;
             }
         } catch (\Exception $e) {
-            return false;
+            throw new \Exception('Não foi possível registrar observador.');
         }
+        return $this;
     }
 
     // Exclui observador para o evento
@@ -31,11 +38,13 @@ class Event implements EventInterface
     {
         try {
             if (isset($name) && !empty($name)) {
-                return $this->observers->deattach($name);
+                $this->observers->deattach($name);
+                return $this;
             }
         } catch (\Exception $e) {
-            return false;
+            throw new \Exception('Não foi possível excluir observador.');
         }
+        return $this;
     }
 
     // Dispara o evento

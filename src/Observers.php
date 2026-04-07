@@ -23,7 +23,7 @@ class Observers implements ObserversInterface
     }
 
     // Adiciona observador para o evento
-    public function attach( $index, $observer)
+    public function attach($index, $observer)
     {
         if(isset($index) && !empty($index) && !empty($observer)) {
             $this->observers[$index] = $observer;
@@ -33,7 +33,7 @@ class Observers implements ObserversInterface
     }
 
     // Exclui observador para o evento
-    public function deattach(string $index)
+    public function deattach($index)
     {
         if (isset($index) && !empty($index)) {
             unset($this->observers[$index]);

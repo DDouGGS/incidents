@@ -2,34 +2,34 @@
 
 namespace event_manager;
 
-use event_manager\EventInterface;
+use event_manager\ObserversInterface;
 
 abstract class EventManager
 {
-    public static $events = array();
+    public static $observers = array();
 
     // Registra evento
-    public static function store($name, $event)
+    public static function store($event, $observers)
     {
-        if (isset($name) && !empty($name) && $event instanceof EventInterface) {
-            static::$events[$name] = $event;
+        if (isset($event) && !empty($event) && $observers instanceof ObserversInterface) {
+            static::$observers[$event] = $observers;
             return true;
         }
         return false;
     }
 
     // resgata evento registrado
-    public static function recover($name)
+    public static function recover($event)
     {
-        if (isset(self::$events[$name])) {
-            return self::$events[$name];
+        if (isset(self::$observers[$event])) {
+            return self::$observers[$event];
         }
         return null;
     }
 
     // Acessa evento
-    public static function exists($name)
+    public static function exists($event)
     {
-        return (isset(self::$events[$name]) && !empty(self::$events[$name]))? true: false;
+        return (isset(self::$observers[$event]) && !empty(self::$observers[$event]))? true: false;
     }
 }

@@ -9,7 +9,7 @@ abstract class EventManager
     public static $observers = array();
 
     // Registra evento
-    public static function store($event, $observers)
+    public static function register($event, $observers)
     {
         if (isset($event) && !empty($event) && $observers instanceof ObserversInterface) {
             static::$observers[$event] = $observers;
@@ -31,5 +31,19 @@ abstract class EventManager
     public static function exists($event)
     {
         return (isset(self::$observers[$event]) && !empty(self::$observers[$event]))? true: false;
+    }
+
+    // Dispara o evento para os observadores
+    public static function notify($event)
+    {
+        $o = self::recover($event);
+        if(isset($o)) { $o->notify();}
+    }
+
+    // Limpa os observadores
+    public static function clear($event)
+    {
+        $o = self::recover($event);
+        if(isset($o)) { $o->clear();}
     }
 }

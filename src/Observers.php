@@ -63,4 +63,10 @@ class Observers implements ObserversInterface
         self::$observers = array();
         return empty(self::$observers) ? true : false;
     }
+
+    // Lista de observers para o evento
+    public function list()
+    {
+        return array_keys(self::$observers);
+    }
 }

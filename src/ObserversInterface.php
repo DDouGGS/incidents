@@ -14,4 +14,7 @@ interface ObserversInterface {
 
     // Limpa os observadores
     public function clear();
+
+    // Lista de observers para o evento
+    public function list();
 }

@@ -2,7 +2,8 @@
 
 namespace event_manager;
 
-interface ObserversInterface {
+interface ObserversInterface
+{
     // Adiciona observador para o evento
     public function attach($index, $observer);
 
@@ -16,5 +17,5 @@ interface ObserversInterface {
     public function clear();
 
     // Lista de observers para o evento
-    public function list();
+    public function listing();
 }

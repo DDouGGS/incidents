@@ -2,17 +2,15 @@
 
 namespace event_manager;
 
-use event_manager\ObserversInterface;
-
 abstract class EventManager
 {
     public static $events = array();
 
     // Registra evento
-    public static function register($event, $index= null, \Closure $observer = null)
+    public static function register($event, $index, \Closure $observer)
     {
         if (isset($event) && !empty($event)) {
-            static::$events[$event] = new Observers($index, $observer);
+            self::$events[$event] = new \event_manager\Observers($index, $observer);
             return true;
         }
         return false;
@@ -21,10 +19,7 @@ abstract class EventManager
     // resgata evento registrado
     public static function recover($event)
     {
-        if (isset(self::$events[$event])) {
-            return self::$events[$event];
-        }
-        return null;
+        return (isset(self::$events[$event]))? self::$events[$event]: null;
     }
 
     // Acessa evento
@@ -38,10 +33,7 @@ abstract class EventManager
     {
         if (!isset($event) || empty($event) || !isset($index) || empty($index)) { return false; }
         $o = self::recover($event);
-        if(isset($o)) {
-            return $o->attach($index, $observer);
-        }
-        return false;
+        return (isset($o))? $o->attach($index, $observer): false;
     }
 
     // Exclui observador para o evento
@@ -49,30 +41,27 @@ abstract class EventManager
     {
         if (!isset($event) || empty($event) || !isset($index) || empty($index)) { return false; }
         $o = self::recover($event);
-        if(isset($o)) { 
-            return $o->deattach($index);
-        }
-        return false;
+        return (isset($o))? $o->deattach($index): false;
     }
 
     // Dispara o evento para os observadores
     public static function notify($event)
     {
         $o = self::recover($event);
-        if(isset($o)) { $o->notify();}
+        return (isset($o))? $o->notify(): false;
     }
 
     // Limpa os observadores
     public static function clear($event)
     {
         $o = self::recover($event);
-        if(isset($o)) { $o->clear();}
+        return (isset($o))? $o->clear(): false;
     }
 
     // Lista de observers para o evento
-    public static function list($event)
+    public static function listing($event)
     {
         $o = self::recover($event);
-        return (isset($o))? $o->list(): array();
+        return (isset($o))? $o->listing(): array();
     }
 }

@@ -2,11 +2,9 @@
 
 namespace event_manager;
 
-use event_manager\ObserversInterface;
-
-class Observers implements ObserversInterface
+class Observers implements \event_manager\ObserversInterface
 {
-    protected $observers = array();
+    public static $observers = array();
 
     // Evento construtor da classe
     public function __construct($index = null, $observer = null)
@@ -26,7 +24,7 @@ class Observers implements ObserversInterface
     public function attach($index, $observer)
     {
         if(isset($index) && !empty($index) && !empty($observer)) {
-            $this->observers[$index] = $observer;
+            self::$observers[$index] = $observer;
             return true;
         }
         return false;
@@ -36,7 +34,7 @@ class Observers implements ObserversInterface
     public function deattach($index)
     {
         if (isset($index) && !empty($index)) {
-            unset($this->observers[$index]);
+            unset(self::$observers[$index]);
             return true;
         }
         return false;
@@ -45,11 +43,9 @@ class Observers implements ObserversInterface
     // Dispara o evento para os observadores
     public function notify()
     {
-        foreach ($this->observers as $key => $item) {
+        foreach (self::$observers as $key => $item) {
             try {
-                if (!$item()) {
-                    throw new \Exception(sprintf("Erro durante a execução do observador %s.", $key));
-                }
+                $item();
             } catch (\Exception $e) {
                 continue;
             }
@@ -65,7 +61,7 @@ class Observers implements ObserversInterface
     }
 
     // Lista de observers para o evento
-    public function list()
+    public function listing()
     {
         return array_keys(self::$observers);
     }

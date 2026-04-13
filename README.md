@@ -24,6 +24,14 @@ Permite registrar eventos, anexar observadores (callbacks) e notificá-los quand
 
 A classe `EventManager` depende de uma implementação de `Observers`, responsável por armazenar e executar os observers.
 
+### Regra para a formação do Closure
+
+- Não utilizar parâmetros de entrada;
+
+- Passar todos os objetos ou dados pelo 'use';
+
+- A função deve retornar um true ou false em caso de erro tratado.
+
 * * *
 
 ## 🛠️ Métodos Disponíveis
@@ -33,8 +41,6 @@ A classe `EventManager` depende de uma implementação de `Observers`, responsá
 Registra um novo evento.
 
 ```php
-EventManager::register('onCreated');
-
 EventManager::register('onCreated', 'created', $observe);
 ```
 
@@ -104,12 +110,12 @@ EventManager::clear('onCreated');
 
 * * *
 
-### 🔹 list(event)
+### 🔹 listing(event)
 
 Lista todos os observers registrados para um evento.
 
 ```php
-$observers = EventManager::list('onCreated');
+$observers = EventManager::listing('onCreated');
 ```
 
 * * *
@@ -136,6 +142,17 @@ $manager->attach('onCreated', 'email', function () {
 
 // Disparar evento
 EventManager::notify('onCreated');
+
+// attach event
+$robot = $this;
+$constSqlOnly = self::OPTION_SQL_ONLY;
+\event_manager\EventManager::register('onSqlOnly', 'sqlOnly', ($sqlonly = function () use($robot, $constSqlOnly){
+    $so = $robot->get_option($constSqlOnly) ;
+    $robot->message(sprintf("Opção pelo SQL ONLY %s", empty($so)? 'não existe':'existe'));
+}));
+
+// notify event
+\event_manager\EventManager::notify('onSqlOnly');
 ```
 
 * * *
@@ -156,20 +173,20 @@ EventManager::notify('onCreated');
         
     - `clear`
         
-    - `list`
+    - `listing`
         
 
 * * *
 
-## 🧩 Possíveis Melhorias
+## 🧩 Próximas Melhorias
 
-- Suporte a parâmetros nos eventos
-    
-- Tipagem mais forte (PHP 7+ / 8+)
-    
 - Tratamento de exceções
-    
-- Suporte a prioridades de execução
+
+- Observers padronizados com funções assincronas, priorizadas, etc;
+
+- Registro do estado da execução e a possibilidade de retomada a partir de onde parrou;
+
+- Registro de log;
     
 
 * * *

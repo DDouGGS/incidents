@@ -4,11 +4,13 @@ namespace event_manager;
 
 class Observers implements \event_manager\ObserversInterface
 {
+    protected $id = null;
     public static $observers = array();
 
     // Evento construtor da classe
     public function __construct($index = null, $observer = null)
     {
+        $this->id = microtime(true);
         if(isset($index) && !empty($index) && !empty($observer)){
             $this->attach($index, $observer);
         }

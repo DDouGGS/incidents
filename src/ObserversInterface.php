@@ -11,11 +11,11 @@ interface ObserversInterface
     public function deattach($index);
     
     // Dispara o evento para os observadores
-    public function notify();
+    public function notify(&$paramn);
 
     // Limpa os observadores
     public function clear();
 
     // Lista de observers para o evento
-    public function listing();
+    public static function keysObservers();
 }

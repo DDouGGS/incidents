@@ -17,5 +17,5 @@ interface ObserversInterface
     public function clear();
 
     // Lista de observers para o evento
-    public static function keysObservers();
+    public static function keys();
 }

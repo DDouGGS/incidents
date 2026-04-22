@@ -6,30 +6,35 @@ use event_manager\ObserversInterface;
 
 class Observers implements ObserversInterface
 {
-    protected $event = null;
-    protected $brand = null;
+    protected $event         = null;
+    protected $protocol      = null;
     public static $observers = array();
 
     // Evento construtor da classe
-    public function __construct($event, $index = null, Object $observer = null)
+    public function __construct($event, $index = null, $observer = null)
     {
-        if(isset($event) && !empty($event) && isset($index) && !empty($index) && !empty($observer)){
+        $this->event = $event;
+        $this->protocol = (string) microtime(true);
+        if(isset($index) && !empty($index) && is_object($observer)){
             $this->attach($index, $observer);
         }
     }
 
     // Criar instancia da classe
-    public static function make($event, $index = null, Object $observer = null)
+    public static function make($event, $index = null, $observer = null)
     {
-        return new Decree($event, $index, $observer);
+        return new Observers($event, $index, $observer);
     }
 
     // Adiciona observador para o evento
     public function attach($index, $observer)
     {
-        if(isset($index) && !empty($index) && !empty($observer)) {
-            self::$observers[$index] = $observer;
-            return true;
+        if(isset($index) && !empty($index) && is_object($observer)) {
+            if(method_exists($observer, $this->event)){
+                self::$observers[$index] = $observer;
+                return true;
+            }
+            return false;
         }
         return false;
     }
@@ -49,9 +54,11 @@ class Observers implements ObserversInterface
     {
         foreach (self::$observers as $key => $item) {
             try {
-                $item->{$this->event}($paramn);
+                if(method_exists($item, $this->event)){
+                    $item->{$this->event}($paramn);
+                }
             } catch (\Exception $e) {
-                continue;
+                throw new \Exception($e->getMessage());
             }
         }
         return true;
@@ -65,7 +72,7 @@ class Observers implements ObserversInterface
     }
 
     // Lista de observers para o evento
-    public static function keysObservers()
+    public static function keys()
     {
         return array_keys(self::$observers);
     }

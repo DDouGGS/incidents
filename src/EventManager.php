@@ -9,27 +9,27 @@ abstract class EventManager
     public static $events = array();
 
     // Registra um novo evento ou acrescenta observador a um já existente
-    public static function add($name, $index = null, Object $observer = null)
+    public static function add($name, $observer = null)
     {
         // register listener
         if (isset($name) && !empty($name)) {
-            if($this->exists($name)){
+            if(self::exists($name)){
                 // with observer
-                if(isset($index) && !empty($index) && isset($observer) && !empty($observer)){
+                if(isset($observer) && is_object($observer)){
                     if(method_exists($observer, $name)){
-                        self::$events[$name]->attach( $index, $observer);
+                        self::$events[$name]->attach( get_class($observer), $observer);
                         return true;
                     }
                     return false;
                 }
-                return $this->newObserver($name);
+                return self::newObserver($name);
             }
             // with observer
-            if(isset($index) && !empty($index) && isset($observer) && !empty($observer)){
-                self::$events[$name] = new Observers($name, $index, $observer);
+            if(isset($observer) && is_object($observer)){
+                self::$events[$name] = new Observers($name, get_class($observer), $observer);
                 return true;
             }
-            return $this->newObserver($name);
+            return self::newObserver($name);
         }
         return false;
     }
@@ -54,15 +54,15 @@ abstract class EventManager
     // Existencia do evento
     public static function exists($event)
     {
-        return (isset(self::$events[$event]) && !empty(self::$events[$event]))? true: false;
+        return (isset(self::$events[$event]))? true: false;
     }
 
     // Adiciona observador para o evento
-    public static function attach($event, $index, Object $observer)
+    public static function attach($event, $observer)
     {
-        if (!isset($event) || empty($event) || !isset($index) || empty($index)) { return false; }
+        if (!is_object($observer)) { return false; }
         $o = self::retrieve($event);
-        return (isset($o))? $o->attach($index, $observer): false;
+        return (isset($o))? $o->attach(get_class($observer), $observer): false;
     }
 
     // Exclui um observador de determinado evento
@@ -74,10 +74,11 @@ abstract class EventManager
     }
 
     // Notifica os observadores do evento
-    public static function notify($event)
+    public static function notify($event, &$paramn)
     {
+        if(!is_object($paramn)){ return false;}
         $o = self::retrieve($event);
-        return (isset($o))? $o->notify($this): false;
+        return (isset($o))? $o->notify($paramn): false;
     }
 
     // Limpa todos os observadores para um determinado evento
@@ -88,7 +89,7 @@ abstract class EventManager
     }
 
     // Lista os observers de determinado evento
-    public static function keysObservers($event)
+    public static function keys($event)
     {
         $o = self::retrieve($event);
         return (isset($o))? $o->listing(): array();
